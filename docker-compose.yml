@@ -1,0 +1,12 @@
+version: '3'
+services:
+  ns2:
+    container_name: ns2
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    image: ns2
+    volumes:
+      - ./ns-2.35:/ns2/ns-2.35/
+    restart: always
+    privileged: true
