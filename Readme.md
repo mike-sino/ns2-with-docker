@@ -1,74 +1,136 @@
 
-# The develop env of ns2
+# The develop env of ns2.35
+This project includes docker develop environment for ns2.35 and already being built source code of ns-2.35
 
-## The fist time
+## Base Docker Image
 
-### 1. build ns2 images
+* [ubuntu:10:04](https://registry.hub.docker.com/u/library/ubuntu/)
+
+## Base project
+
+* [docker-ns2](https://github.com/ekiourk/docker-ns2/)
+
+
+## Usage
+
+### The first time 
+
+Step 1. build ns2 images
 
 ```
 docker build .
 ```
 
-### 2. run ns2 container
+Step 2. run ns2 container
 
 ```
 docker run
 ```
 
-
-### 3. copy ns-2.35 from docker to local
+Step 3. copy ns-2.35 from container to host
 
 ```
 sudo docker cp ns2:/ns2/ns-2.35/. ./ns-2.35
 ```
 
-### 4. start container
+Step 4. start container
 
 ```
 docker-compose up -d
 ```
 
-### 5. close container
+Step 5. close container
 
 ```
 docker-compose down
 ```
 
-## simulation tools
+### After the first time:
 
-1. cbrgen.tcl:
+Step 1. start container
+
+```
+docker-compose up -d
+```
+
+Step 2. go inside contianer:
+```
+docker exec -it ns2 bash
+```
+
+Step 3. close container
+
+```
+docker-compose down
+```
+
+## simulation Steps
+
+Step 1. cbrgen.tcl is used to generate cbr flows:
 
 ```
 ~/ns-allinone-2.35/ns-2.35/indep-utils/cmu-scen-gen/cbrgen.tcl
 ```
 
-for example, in local host ns-2.35/aodv/testfile/:
-
+if in local host ~/ns2/ns-2.35/testfile/:
 ```
 docker exec -it ns2 ns /ns2/ns-2.35/indep-utils/cmu-scen-gen/cbrgen.tcl -type cbr -nn 50 -seed 1 -mc 10 -rate 2.0 > cbr1
 ```
 
-2. setdest:
-
+if inside the container ~/ns2/ns-2.35/indep-utils/cmu-scen-gen/:
 ```
-~/ns-allinone-2.35/ns-2.35/indep-utils/cmu-scen-gen/setdest/
+cbrgen.tcl -type cbr -nn 50 -seed 1 -mc 10 -rate 2.0 > cbr1
+```
+```
+mv cbr1 /ns2/ns-2.35/testfile/
 ```
 
-for example, in local host ns-2.35/aodv/testfile/:
-
+Step 2. setdest is used to generate simulation scenario:
+```
+~/ns-allinone-2.35/ns-2.35/indep-utils/cmu-scen-gen/setdest/setdest
+```
+    
+if in local host ~/ns-2.35/testfile/:
 ```
 docker exec -it ns2 /ns2/ns-2.35/indep-utils/cmu-scen-gen/setdest/setdest -n 50 -p 0 -M 20 -t 300 -x 1000 -y 300 > scene1
 ```
 
+if inside the container ~/ns2/ns-2.35/indep-utils/cmu-scen-gen/setdest/:
+```
+setdest -n 50 -p 0 -M 20 -t 300 -x 1000 -y 300 > scene1
+```
+```
+mv scene1 /ns2/ns-2.35/testfile/
+```
 
-3. test file of AODV
+Step 3. run a tcl script using ns
 
 ```
-~/ns-allinone-2.35/ ns-2.35/aodv/testfile/
+~/ns-allinone-2.35/ns-2.35/testfile/
 ```
 
-for example, in local host ns-2.35/aodv/testfile/:
+inside the container ~/ns2/ns-2.35/testfile/:
 
 ```
-docker exec -it ns2 ns /ns2/ns-2.35/aodv/testfile/aodv.tcl
+ns ./aodv.tcl
 ```
+
+Step 4. simulation virtualization using nam
+
+1. mac OS: 
+
+this project is tested on mac OS, before use this project run `xhost + 127.0.0.1` in mac OS.
+
+2. unix or linux: 
+
+run container with bash in order to get a prompt inside the container. 
+
+Make sure you mount the X11 socket and set the DISPLAY environment variable`docker run -it -v $PWD/ns-simple.tcl:/ns-simple.tcl -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY ns2 bash`
+
+After you are inside the container run ns /ns-simple.tcl and NAM should open ready to animate the simulation
+
+If there are problems starting NAM then try to set the argument --cap-add=SYS_ADMIN and run `xhost local:root` on the host.
+
+
+
+
