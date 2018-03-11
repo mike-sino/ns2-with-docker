@@ -10,7 +10,7 @@ services:
       - "8080:8080"
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ./ns-2.35:/ns2/ns-2.35
+      - ../ns-2.35:/ns2/ns-2.35
     restart: always
     command: jupyter notebook --ip 0.0.0.0 --port 8080 --no-browser --allow-root
     privileged: true
