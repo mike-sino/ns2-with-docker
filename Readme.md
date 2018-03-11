@@ -132,5 +132,11 @@ If there are problems starting NAM then try to set the argument --cap-add=SYS_AD
 
 ## Python 
 
+python3.6
+
+pip3.6 
 
 ## Jupyter notebook
+
+You can access to jupyter notebook through "http://localhost:8080" with login password: "jupyter"
+

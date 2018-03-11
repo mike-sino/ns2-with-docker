@@ -27,18 +27,21 @@ ENV TCL_LIBRARY /ns2/tcl8.5.10/library
 WORKDIR ns-2.35
 
 # Install Miniconda
-RUN curl -LO http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh
-RUN bash Miniconda-latest-Linux-x86_64.sh -p /miniconda -b
-RUN rm Miniconda-latest-Linux-x86_64.sh
+RUN curl -LO https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+RUN bash Miniconda3-latest-Linux-x86_64.sh -p /miniconda -b
+RUN rm Miniconda3-latest-Linux-x86_64.sh
 ENV PATH $PATH:/miniconda/bin
 RUN conda update -y conda
 RUN pip install --upgrade pip
 
 # Install Jupyter
 RUN conda install jupyter
+RUN mkdir /notebook/
+RUN jupyter notebook --generate-config
+COPY init/jupyter_notebook_config.py /root/.jupyter/jupyter_notebook_config.py
 
 # Install Minimal C kernel for Jupyter
 RUN pip install jupyter-c-kernel
-RUN bash install_c_kernel
+RUN install_c_kernel
 
-CMD ["jupyter", "notebook", "--ip", "0.0.0.0", "--port", "8080", "--no-browser"]
+CMD ["/sbin/init"]
