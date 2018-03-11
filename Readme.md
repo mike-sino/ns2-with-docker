@@ -64,7 +64,9 @@ Step 3. close container
 docker-compose down
 ```
 
-## simulation Steps
+# The useage of ns2
+
+## Simulation Steps
 
 Step 1. cbrgen.tcl is used to generate cbr flows:
 
@@ -105,32 +107,30 @@ mv scene1 /ns2/ns-2.35/testfile/
 
 Step 3. run a tcl script using ns
 
-```
-~/ns-allinone-2.35/ns-2.35/testfile/
-```
-
 inside the container ~/ns2/ns-2.35/testfile/:
 
 ```
 ns ./aodv.tcl
 ```
 
-Step 4. simulation virtualization using nam
+## Simulation virtualization using nam
 
-1. mac OS: 
-
+### mac OS: 
 this project is tested on mac OS, before use this project run `xhost + 127.0.0.1` in mac OS.
 
-2. unix or linux: 
+### unix or linux: 
 
-run container with bash in order to get a prompt inside the container. 
+1. First run container with bash in order to get a prompt inside the container. Make sure you mount the X11 socket and set the DISPLAY environment variable
+`docker run -it -v $PWD/ns-simple.tcl:/ns-simple.tcl -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY ekiourk/ns2 bash`
 
-Make sure you mount the X11 socket and set the DISPLAY environment variable`docker run -it -v $PWD/ns-simple.tcl:/ns-simple.tcl -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY ns2 bash`
+2. After you are inside the container run ns /ns-simple.tcl and NAM should open ready to animate the simulation
 
-After you are inside the container run ns /ns-simple.tcl and NAM should open ready to animate the simulation
-
-If there are problems starting NAM then try to set the argument --cap-add=SYS_ADMIN and run `xhost local:root` on the host.
-
+If there are problems starting NAM then try to set the argument --cap-add=SYS_ADMIN and run `xhost local:root` on the host
 
 
+# Python and Jupyter notebook
 
+## Python 
+
+
+## Jupyter notebook
