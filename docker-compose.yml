@@ -6,7 +6,13 @@ services:
       context: ./docker
       dockerfile: Dockerfile
     image: ns2
+    ports:
+      - "8080:8080"
     volumes:
-      - ./ns-2.35:/ns2/ns-2.35/
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./ns-2.35:/ns2/ns-2.35
     restart: always
+    command: jupyter notebook --ip 0.0.0.0 --port 8080 --no-browser --allow-root
+    environment:
+      - DISPLAY=docker.for.mac.localhost:0
     privileged: true
