@@ -4,7 +4,7 @@ This project includes docker develop environment for ns2.35 and already being bu
 
 ## Base Docker Image
 
-* [ubuntu:10:04](https://registry.hub.docker.com/u/library/ubuntu/)
+* [ubuntu:14:04](https://registry.hub.docker.com/u/library/ubuntu/)
 
 ## Base project
 
