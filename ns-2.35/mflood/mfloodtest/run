@@ -1,0 +1,13 @@
+i=1
+while (test $i -lt 20)
+do
+	# 生成运动场景，注意路径
+	setdest -n 50 -p 0 -s 40 -t 400 -x 1200 -y 1200 > scene-50n-0p-40s-400t-1200-1200
+	# 生成数据流场景，注意路径
+	ns cbrgen.tcl -type cbr -nn 50 -seed $i -mc 30 -rate 1.0 > cbr-50n-30c-1p
+	ns mflood-scene.tcl			;# 一次ns运行
+	analysis-result	mflood-scene.tr ;# 分析、统计运行结果，只是示例，表示有这个步骤
+    let i=i+1
+done
+
+

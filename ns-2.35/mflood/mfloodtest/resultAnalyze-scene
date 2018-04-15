@@ -1,0 +1,35 @@
+#! /bin/bash
+
+rm $1-?.data
+rm $1.plot
+#grep "AGT" $1.tr > $1-agt.tr
+
+src1=1	dst1=2 src2=4 dst2=5 src3=4 dst3=6 src4=6 dst4=7 src5=7 dst5=8
+
+i=$src1
+j=$dst1
+dd="plot \"$1-$i-$j.data\" title \"$i->$j\" with linespoints"
+gawk -v outfile="$1-$i-$j.data" -v src=$i -v dst=$j -f getNodeRecv.awk $1-agt.tr
+echo $dd
+for k in 2 3 4 5
+do
+i=src${k}
+i=$[$i]
+j=dst$k
+j=$[$j]
+echo $i $j
+gawk -v outfile="$1-$i-$j.data" -v src=$i -v dst=$j -f getNodeRecv.awk $1-agt.tr
+dd=$dd",\"$1-$i-$j.data\" title \"$i->$j\" with linespoints"
+done
+
+echo $dd
+
+echo "set term png medium monochrome" >> $1.plot
+echo "set output \"$1.png\"" >> $1.plot
+echo "set ylabel \"Transmission Speed(KB/s)\"" >> $1.plot
+echo "set xlabel \"Time(s)\"" >> $1.plot
+echo "set key left top box" >> $1.plot
+echo "set title \"MFlood Ananysis\"" >> $1.plot
+echo $dd >> $1.plot
+
+gnuplot $1.plot
