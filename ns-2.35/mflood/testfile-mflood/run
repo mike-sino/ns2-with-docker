@@ -1,0 +1,13 @@
+i=1
+while (test $i -lt 20)
+do
+	# create scenrio
+	setdest -n 50 -p 0 -s 40 -t 400 -x 1200 -y 1200 > scene-50n-0p-40s-400t-1200-1200
+	# create the cbr
+	ns cbrgen.tcl -type cbr -nn 50 -seed $i -mc 30 -rate 1.0 > cbr-50n-30c-1p
+	ns mflood-scene.tcl			;# run ns simulation
+	analysis-result	mflood-scene.tr ;# analyse the trace file
+    let i=i+1
+done
+
+

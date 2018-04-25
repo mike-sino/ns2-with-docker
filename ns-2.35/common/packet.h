@@ -416,7 +416,7 @@ public:
 		name_[PT_DCCP_CLOSE]="DCCP_Close";
 		name_[PT_DCCP_CLOSEREQ]="DCCP_CloseReq";
 		name_[PT_DCCP_RESET]="DCCP_Reset";
-		name_[PT_MFLOOD]="MFlood";
+		name_[PT_MFLOOD]= "MFlood";
 		
 		name_[PT_NTYPE]= "undefined";
 	}
