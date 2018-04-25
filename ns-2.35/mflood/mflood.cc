@@ -1,34 +1,30 @@
-#include <mflood/mflood.h>
-#include <mflood/mflood-packet.h>
-//#include <mflood.h>
+#include "mflood.h"  
+#include "mflood-packet.h"  
+#include <cmu-trace.h>  
 #include <random.h>
-#include <cmu-trace.h>
-//#include <iostream>
 
 // New packet type
 int hdr_mflood::offset_;
-static class MFloodHeaderClass : public PacketHeaderClass {
+
+static class MFloodHeaderClass:public PacketHeaderClass {
 public:
-	MFloodHeaderClass() : PacketHeaderClass("PacketHeader/MFlood", 
-					      sizeof(hdr_mflood)) {
+	MFloodHeaderClass() : PacketHeaderClass("PacketHeader/MFlood", sizeof(hdr_mflood)) {
 		bind_offset(&hdr_mflood::offset_);
 	}
 } class_mfloodhdr;
 
 // TCL Hooks
-static class MFloodclass : public TclClass {
+static class MFloodclass:public TclClass {
 public:
-	MFloodclass() : TclClass("Agent/MFlood") {}
-	TclObject* create(int argc, const char*const* argv) {
+	MFloodclass():TclClass("Agent/MFlood") {}
+	TclObject* create(int argc, const char *const *argv) {
 		assert(argc == 5);
 		return (new MFlood((nsaddr_t) atoi(argv[4])));	// PBO agrv[4] is index_}
 	}
 } class_rtProtoMFlood;
 
-
-int
-MFlood::command(int argc, const char*const* argv) {
-	Tcl& tcl = Tcl::instance();
+int MFlood::command(int argc, const char *const *argv) {
+	Tcl &tcl = Tcl::instance();
 	if(argc == 2) {		
 		if(strncasecmp(argv[1], "id", 2) == 0) {
 			tcl.resultf("%d", index_);
@@ -69,7 +65,7 @@ MFlood::command(int argc, const char*const* argv) {
 	return Agent::command(argc, argv);
 }
 
-MFlood::MFlood(nsaddr_t id) : Agent(PT_MFLOOD), port_dmux_(0) {
+MFlood::MFlood(nsaddr_t id):Agent(PT_MFLOOD), port_dmux_(0) {
 	index_ = id;
 	logtarget = 0;
 	myseq_ = 0;
@@ -77,51 +73,44 @@ MFlood::MFlood(nsaddr_t id) : Agent(PT_MFLOOD), port_dmux_(0) {
 
 
 // Route Handling Functions
-void
-MFlood::rt_resolve(Packet *p) {
+void MFlood::rt_resolve(Packet *p) {
+
 	struct hdr_cmn *ch = HDR_CMN(p);
 	struct hdr_ip *ih = HDR_IP(p);
 	struct hdr_mflood *fh = HDR_MFLOOD(p);
-	MFlood_RTEntry* rt;
-
+	MFlood_RTEntry *rt;
 	rt = rtable_.rt_lookup(ih->saddr());
+
 	if(rt == NULL) {
 		rt = new MFlood_RTEntry(ih->saddr(), fh->seq_);
-
 		LIST_INSERT_HEAD(&rtable_.rthead,rt,rt_link);		
-	
 		//printf("%.8f %d,no uptarget,\n",NOW,index_);
 		forward(rt,p,FORWARD_DELAY);
-		
-//printf("%.8f %d,no rt,so forward.rt_seq:%d,pkt seq:%d\n",NOW,index_,rt->max_seqno,fh->seq_);
-rtable_.rt_print();		
-		
+		//printf("%.8f %d,no rt,so forward.rt_seq:%d,pkt seq:%d\n",NOW,index_,rt->max_seqno,fh->seq_);
+		rtable_.rt_print();		
 	}
+
 //	else if(rt->seq_ < fh->seq_ )
-	else if(rt->isNewSeq(fh->seq_) )
+	else if(rt->isNewSeq(fh->seq_))
 	{
 		//printf("%.8f %d,no uptarget,\n",NOW,index_);
 		forward(rt, p, FORWARD_DELAY);
-		
-//		rt->seq_ = fh->seq_;
+		//rt->seq_ = fh->seq_;
 		rt->addSeq(fh->seq_);
-
-//printf("%.8f %d,rt seq too small,so forward,rt_seq:%d,packet seq:%d.\n",NOW,index_,rt->max_seqno,fh->seq_);	
-rtable_.rt_print();		
-	}
-	else
-	{
+		//printf("%.8f %d,rt seq too small,so forward,rt_seq:%d,packet seq:%d.\n",NOW,index_,rt->max_seqno,fh->seq_);	
+		rtable_.rt_print();		
+	} else {
 		drop(p, "LOWSEQ");
 	}
 }
 
 
 // Packet Reception Routines
-void
-MFlood::recv(Packet *p, Handler*) {
+void MFlood::recv(Packet *p, Handler*) {
 	struct hdr_cmn *ch = HDR_CMN(p);
 	struct hdr_ip *ih = HDR_IP(p);
 	struct hdr_mflood *fh = HDR_MFLOOD(p);
+ 
 	assert(initialized());
 
 	if((ih->saddr() == index_) && (ch->num_forwards() == 0)) {	// Must be a packet I'm originating...		
@@ -145,16 +134,17 @@ MFlood::recv(Packet *p, Handler*) {
 
 
 // Packet Transmission Routines
-void
-MFlood::forward(MFlood_RTEntry* rt, Packet *p, double delay) {
+void MFlood::forward(MFlood_RTEntry *rt, Packet *p, double delay) {
 	struct hdr_cmn *ch = HDR_CMN(p);
 	struct hdr_ip *ih = HDR_IP(p);
 
 	assert(ih->ttl_ > 0);
 	assert(rt != 0);
 //	assert(rt->rt_flags == RTF_UP);
+
 	ch->next_hop_ = -1;	//Broadcast address
 	ch->addr_type() = NS_AF_INET;
+
 	ch->direction() = hdr_cmn::DOWN;       //important: change the packet's direction
 	if(delay > 0.0) {
  		Scheduler::instance().schedule(target_, p, Random::uniform(delay*2));

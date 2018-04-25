@@ -4,7 +4,7 @@
 /*
  * JFlood Routing Protocol Header Macros
  */
-#define HDR_MFLOOD(p)		((struct hdr_mflood*)hdr_mflood::access(p))
+#define HDR_MFLOOD(p) ((struct hdr_mflood*)hdr_mflood::access(p))
 
 /*
  * General JFlood Header

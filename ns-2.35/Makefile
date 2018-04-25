@@ -64,7 +64,7 @@ DEFINE	= -DTCP_DELAY_BIND_ALL -DNO_TK -DTCLCL_CLASSINSTVAR  -DNDEBUG -DLINUX_TCP
 INCLUDES = \
 	-I.  \
 	-I. \
-	-I/ns2/tclcl-1.20 -I/ns2/otcl-1.14 -I/ns2/include -I/ns2/include -I/ns2/include -I/usr/include/pcap \
+	-I/ns2/tclcl-1.20 -I/ns2/otcl -I/ns2/include -I/ns2/include -I/ns2/include -I/usr/include/pcap \
 	-I./tcp -I./sctp -I./common -I./link -I./queue \
 	-I./adc -I./apps -I./mac -I./mobile -I./trace \
 	-I./routing -I./tools -I./classifier -I./mcast \
@@ -76,9 +76,9 @@ INCLUDES = \
 
 
 LIB	= \
-	-L/ns2/tclcl-1.20 -ltclcl -L/ns2/otcl-1.14 -lotcl -L/ns2/lib -ltk8.5 -L/ns2/lib -ltcl8.5 \
+	-L/ns2/tclcl-1.20 -ltclcl -L/ns2/otcl -lotcl -L/ns2/lib -ltk8.5 -L/ns2/lib -ltcl8.5 \
 	-lXext -lX11 \
-	 -lnsl -ldl \
+	 -lnsl -lpcap -ldl \
 	-lm -lm 
 #	-L${exec_prefix}/lib \
 
@@ -394,7 +394,7 @@ SUBDIRS=\
 	indep-utils/webtrace-conv/nlanr \
 	indep-utils/webtrace-conv/ucb
 
-BUILD_NSE = 
+BUILD_NSE = nse
 
 all: $(NS) $(BUILD_NSE) $(NSTK) all-recursive Makefile
 

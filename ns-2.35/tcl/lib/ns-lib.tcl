@@ -663,6 +663,9 @@ Simulator instproc create-wireless-node args {
 			    eval $node addr $args
 			    set ragent [$self create-omnimcast-agent $node]
 		    }
+			MFlood {
+    			set ragent [$self create-mflood-agent $node]
+			}
 		    DumbAgent {
 			    set ragent [$self create-dumb-agent $node]
 		    }
@@ -2293,3 +2296,8 @@ Simulator instproc prepare-to-stop {} {
 	}
 }
     
+Simulator instproc create-mflood-agent {node} {
+ set ragent [new Agent/MFlood [$node id]]
+ $node set ragent_ $ragent
+ return $ragent
+}

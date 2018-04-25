@@ -1,17 +1,11 @@
-// PBO ================================================================
-// I have added some lines into ~ns2/tcl/lib/ns-lib.tcl
-// I copy the file ns-lib.tcl to this directory for reference
-// PBO ================================================================
-
-#ifndef __mflood_h__
-#define __mflood_h__
+#ifndef ns_mflood_h  
+#define ns_mflood_h
 
 #include <sys/types.h>
 #include <cmu-trace.h>
 #include <priqueue.h>
 #include <mflood/mflood-seqtable.h>
 #include <list>
-//#include <mflood_seqtable.h>
 
 #define NOW (Scheduler::instance().clock())
 
@@ -24,14 +18,14 @@
 
 // The Routing Agent
 class MFlood: public Agent {
-	friend class MFlood_RTEntry;
+	friend class MFlood_RTEntry;   //MFlood_RTEntry is routing table class
 
 public:
 	MFlood(nsaddr_t id);
 	void recv(Packet *p, Handler *);
 
 protected:
-	int command(int, const char *const *);
+	int command(int, const char *const *);    //command process function
 	inline int initialized() { return 1 && target_; }
 
 	// Route Table Management
@@ -49,7 +43,8 @@ protected:
 	Trace *logtarget;
 	NsObject *uptarget_;
 	NsObject *port_dmux_;
-  private:
+
+private:
   	u_int32_t myseq_;
 };
 

@@ -3435,6 +3435,7 @@ GAF 	# Geographic Adaptive Delity, for ad-hoc networks\n\
 LL 	# network wireless stack\n\
 LRWPAN  # zheng, wpan/p802_15_4mac.cc\n\
 Mac 	# network wireless stack\n\
+MFlood  # routing of multicast flooding\n\
 AODV 	# routing protocol for ad-hoc networks\n\
 Diffusion 	# diffusion/diffusion.cc\n\
 IMEP 	# Internet MANET Encapsulation Protocol, for ad-hoc networks\n\
@@ -21174,6 +21175,9 @@ OMNIMCAST {\n\
 eval $node addr $args\n\
 set ragent [$self create-omnimcast-agent $node]\n\
 }\n\
+MFlood {\n\
+set ragent [$self create-mflood-agent $node]\n\
+}\n\
 DumbAgent {\n\
 set ragent [$self create-dumb-agent $node]\n\
 }\n\
@@ -22572,6 +22576,11 @@ $i stop\n\
 }\n\
 }\n\
 \n\
+Simulator instproc create-mflood-agent {node} {\n\
+set ragent [new Agent/MFlood [$node id]]\n\
+$node set ragent_ $ragent\n\
+return $ragent\n\
+}\n\
 \n\
 Simulator instproc attach-diffapp { node diffapp } {\n\
 $diffapp dr [$node get-dr]\n\
