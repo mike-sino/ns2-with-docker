@@ -1,6 +1,13 @@
 
 # The develop env of ns2.35
-This project includes docker develop environment for ns2.35 and already being built source code of ns-2.35.  
+
+## Composition
+
+This project includes:
+1. docker develop environment for ns
+2. already being built source code of ns
+3. tools to support ns simulation 
+4. ns2 simulation howto document/tips
 
 ## Document
 
