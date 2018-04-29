@@ -5,8 +5,12 @@ LABEL version="1.0"
 
 # Update Ubuntu and Install Dev
 RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends build-essential autoconf automake libxmu-dev libpcap-dev curl gcc-4.4 gcc gdb libc6-dev openjdk-7-jdk&& \
-    rm -rf /var/lib/apt/lists/* 
+    apt-get install -y --no-install-recommends build-essential autoconf automake libxmu-dev libpcap-dev curl gcc-4.4 gcc gdb libc6-dev openjdk-7-jdk && \
+    rm -rf /var/lib/apt/lists/*
+RUN mkdir /app && \
+    mkdir /app/tools && \
+    mkdir /app/py-parser
+
 
 # Install NS2
 RUN curl -L -k http://downloads.sourceforge.net/project/nsnam/allinone/ns-allinone-2.35/ns-allinone-2.35.tar.gz | tar xz && \
