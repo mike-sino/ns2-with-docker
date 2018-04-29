@@ -5,7 +5,7 @@ LABEL version="1.0"
 
 # Update Ubuntu and Install Dev
 RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends build-essential autoconf automake libxmu-dev libpcap-dev curl gcc-4.4 && \
+    apt-get install -y --no-install-recommends build-essential autoconf automake libxmu-dev libpcap-dev curl gcc-4.4 gcc gdb libc6-dev openjdk-7-jdk&& \
     rm -rf /var/lib/apt/lists/* 
 
 # Install NS2
