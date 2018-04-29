@@ -1,0 +1,20 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+
+    "version": "2.0.0",
+    "tasks": [
+        {   
+            "label": "ns2 make",
+            "type": "shell",
+            "command": "docker",           //use gcc or clang for c, use g++ or clang++ for c++
+            "args": [
+                "exec", "-it", "ns2", "make", "clean"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true            // default building task invoked by "Ctrl+Shift+B"
+            }
+        }
+    ]
+}
