@@ -1,11 +1,7 @@
 {
     "python.pythonPath": "/anaconda3/bin/python",
     "C_Cpp.intelliSenseEngineFallback": "Disabled",
-    "C_Cpp.errorSquiggles": "Disabled",
-    "restructuredtext.confPath": "${workspaceRoot}/docs",
-    "restructuredtext.builtDocumentationPath": "${workspaceRoot}/docs/_build/html",
-    "restructuredtext.workspaceRoot": "${workspaceRoot}/docs",
-    "restructuredtext.languageServer.trace.server": "messages"
+    "C_Cpp.errorSquiggles": "Disabled",  
 }
 
 
