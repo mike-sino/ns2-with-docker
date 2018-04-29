@@ -53,7 +53,7 @@ BINDEST = /usr/local/bin
 
 CC = g++
 INCLUDE = -I. -I/ns2/tclcl-1.20 -I/ns2/otcl -I/ns2/include -I/ns2/include -I/ns2/include -I/usr/include/pcap
-CFLAGS = -O2 -Wall -Wno-write-strings -DCPP_NAMESPACE=std
+CFLAGS = -g -Wall -Wno-write-strings -Wno-parentheses -Werror -DCPP_NAMESPACE=std
 LDFLAGS = 
 LIBS = -L/ns2/lib -ltcl8.5  -lnsl -lpcap -ldl -lm 
 INSTALL = /usr/bin/install -c
