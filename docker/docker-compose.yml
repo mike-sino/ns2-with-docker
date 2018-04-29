@@ -11,6 +11,8 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ../ns-2.35:/ns2/ns-2.35
+      - ../py-parser:/app/py-parser
+      - ../tools:/app/tools
       - ../notebook:/notebook
     restart: always
     command: jupyter notebook
