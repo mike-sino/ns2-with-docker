@@ -2,7 +2,7 @@
 
 ### Maintainers:
 
-1. The MASH research group [University of California, Berkeley.](http://www-mash.cs.berkeley.edu/ns/)
+1. The [MASH](http://www-mash.cs.berkeley.edu/ns/) research group University of California, Berkeley.
 2. The [VINT](http://www.isi.edu/nsnam/vint) project is a collaboration among USC/ISI, Xerox PARC, LBNL, and UCB
 3. The [CONSER](http://www.isi.edu/conser/) project
 
