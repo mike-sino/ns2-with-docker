@@ -71,7 +71,7 @@ Step 2. setdest is used to generate simulation scenario::
 
     $ ~/ns-allinone-2.35/ns-2.35/indep-utils/cmu-scen-gen/setdest/setdest
 
-if in local host ~/ns-2.35/testfile/:
+if in local host ~/ns-2.35/testfile/::
 
     $ docker exec -it ns2 /ns2/ns-2.35/indep-utils/cmu-scen-gen/setdest/
     setdest -n 50 -p 0 -M 20 -t 300 -x 1000 -y 300 > scene1
