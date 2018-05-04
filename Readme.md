@@ -31,7 +31,7 @@ Python files for ns2 simulation preparation and results analyser
 [NSG2.1](https://sites.google.com/site/pengjungwu/nsg) is devlopped in Java to make generation of tcl file easy
 
 ## Virtualization
-In order to display the windows (nam or NSG) from docker to macOS that you should:
+In order to display the GUI (nam / NSG / APP Tool) from docker to macOS that you should:
 1. Confirm X11 is already installed 
 2. Run `xhost + 127.0.0.1` in mac OS in advance.
 
