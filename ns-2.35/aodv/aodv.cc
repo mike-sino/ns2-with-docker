@@ -51,7 +51,7 @@ static int route_request = 0;
   TCL Hooks
 */
 
-
+/*AODVHeaderClass has two functions: constructor and bind_offset */
 int hdr_aodv::offset_;
 static class AODVHeaderClass : public PacketHeaderClass {
 public:
@@ -61,6 +61,7 @@ public:
 	} 
 } class_rtProtoAODV_hdr;
 
+/*AODVHeaderClass has two functions: constructor and create */
 static class AODVclass : public TclClass {
 public:
         AODVclass() : TclClass("Agent/AODV") {}
@@ -71,10 +72,10 @@ public:
         }
 } class_rtProtoAODV;
 
-
+/*comand function is used for the distribution of command */
 int
 AODV::command(int argc, const char*const* argv) {
-  if(argc == 2) {
+  if(argc == 2) {                           //command parameter number is 2
   Tcl& tcl = Tcl::instance();
     
     if(strncasecmp(argv[1], "id", 2) == 0) {
@@ -94,7 +95,7 @@ AODV::command(int argc, const char*const* argv) {
       return TCL_OK;
      }               
   }
-  else if(argc == 3) {
+  else if(argc == 3) {                       //command parameter number is 3
     if(strcmp(argv[1], "index") == 0) {
       index = atoi(argv[2]);
       return TCL_OK;
@@ -183,6 +184,7 @@ RouteCacheTimer::handle(Event*) {
   Scheduler::instance().schedule(this, &intr, FREQUENCY);
 }
 
+//route cache timer
 void
 LocalRepairTimer::handle(Event* p)  {  // SRD: 5/4/99
 aodv_rt_entry *rt;
@@ -245,6 +247,7 @@ BroadcastID *b = bihead.lh_first;
 BroadcastID *bn;
 double now = CURRENT_TIME;
 
+//remove the expired broadcast id 
  for(; b; b = bn) {
    bn = b->link.le_next;
    if(b->expire <= now) {
@@ -292,11 +295,11 @@ aodv_rt_failed_callback(Packet *p, void *arg) {
  * This routine is invoked when the link-layer reports a route failed.
  */
 void
-AODV::rt_ll_failed(Packet *p) {
+AODV::rt_ll_failed(Packet *p) {    //process if the neighbour link failed
 struct hdr_cmn *ch = HDR_CMN(p);
 struct hdr_ip *ih = HDR_IP(p);
 aodv_rt_entry *rt;
-nsaddr_t broken_nbr = ch->next_hop_;
+nsaddr_t broken_nbr = ch->next_hop_;  //record the address of next hop
 
 #ifndef AODV_LINK_LAYER_DETECTION
  drop(p, DROP_RTR_MAC_CALLBACK);
@@ -305,13 +308,13 @@ nsaddr_t broken_nbr = ch->next_hop_;
  /*
   * Non-data packets and Broadcast Packets can be dropped.
   */
-  if(! DATA_PACKET(ch->ptype()) ||
+  if(! DATA_PACKET(ch->ptype()) ||                  //drop if packets or Broadcast Packets
      (u_int32_t) ih->daddr() == IP_BROADCAST) {
     drop(p, DROP_RTR_MAC_CALLBACK);
     return;
   }
   log_link_broke(p);
-	if((rt = rtable.rt_lookup(ih->daddr())) == 0) {
+	if((rt = rtable.rt_lookup(ih->daddr())) == 0) {    //drop if no route to the destination node
     drop(p, DROP_RTR_MAC_CALLBACK);
     return;
   }
@@ -321,7 +324,7 @@ nsaddr_t broken_nbr = ch->next_hop_;
   /* if the broken link is closer to the dest than source, 
      attempt a local repair. Otherwise, bring down the route. */
 
-
+//repair the route if forwarded hots is more than that to the destination node, else drop the data through this neighbour and delete this neighbour
   if (ch->num_forwards() > rt->rt_hops) {
     local_rt_repair(rt, p); // local repair
     // retrieve all the packets in the ifq using this link,
@@ -344,6 +347,7 @@ while((p = ifqueue->filter(broken_nbr))) {
 #endif // LINK LAYER DETECTION
 }
 
+/* if the link to the node failed, handle it */
 void
 AODV::handle_link_failure(nsaddr_t id) {
 aodv_rt_entry *rt, *rtn;
@@ -351,9 +355,10 @@ Packet *rerr = Packet::alloc();
 struct hdr_aodv_error *re = HDR_AODV_ERROR(rerr);
 
  re->DestCount = 0;
+ // find the route through this node
  for(rt = rtable.head(); rt; rt = rtn) {  // for each rt entry
    rtn = rt->rt_link.le_next; 
-   if ((rt->rt_hops != INFINITY2) && (rt->rt_nexthop == id) ) {
+   if ((rt->rt_hops != INFINITY2) && (rt->rt_nexthop == id) ) {  // if hops is infinity or the node is next hop
      assert (rt->rt_flags == RTF_UP);
      assert((rt->rt_seqno%2) == 0);
      rt->rt_seqno++;
@@ -365,13 +370,13 @@ struct hdr_aodv_error *re = HDR_AODV_ERROR(rerr);
 		     re->unreachable_dst_seqno[re->DestCount], rt->rt_nexthop);
 #endif // DEBUG
      re->DestCount += 1;
-     rt_down(rt);
+     rt_down(rt);  //down this route
    }
    // remove the lost neighbor from all the precursor lists
    rt->pc_delete(id);
  }   
 
- if (re->DestCount > 0) {
+ if (re->DestCount > 0) {  //if there is route through this node to destination, then print error
 #ifdef DEBUG
    fprintf(stderr, "%s(%f): %d\tsending RERR...\n", __FUNCTION__, CURRENT_TIME, index);
 #endif // DEBUG
@@ -500,6 +505,7 @@ aodv_rt_entry *rt;
 
 }
 
+/*check the router cache list accorting to timer*/
 void
 AODV::rt_purge() {
 aodv_rt_entry *rt, *rtn;
@@ -572,6 +578,8 @@ struct hdr_ip *ih = HDR_IP(p);
  /*
   *  Must be a packet I'm originating...
   */
+
+ //if the packet is that sent by me, then add up the paket header
 if((ih->saddr() == index) && (ch->num_forwards() == 0)) {
  /*
   * Add the IP Header.  
@@ -607,7 +615,7 @@ else if(ih->saddr() == index) {
    }
  }
 // Added by Parag Dadhania && John Novatnack to handle broadcasting
- if ( (u_int32_t)ih->daddr() != IP_BROADCAST)
+ if ( (u_int32_t)ih->daddr() != IP_BROADCAST)     //if is broadcast then send to re_resolve; or else forward
    rt_resolve(p);
  else
    forward((aodv_rt_entry*) 0, p, NO_DELAY);
@@ -662,7 +670,7 @@ aodv_rt_entry *rt;
    *      - I recently heard this request.
    */
 
-  if(rq->rq_src == index) {
+  if(rq->rq_src == index) {   //if I'm the source, then drop it 
 #ifdef DEBUG
     fprintf(stderr, "%s: got my own REQUEST\n", __FUNCTION__);
 #endif // DEBUG
@@ -670,7 +678,7 @@ aodv_rt_entry *rt;
     return;
   } 
 
- if (id_lookup(rq->rq_src, rq->rq_bcast_id)) {
+ if (id_lookup(rq->rq_src, rq->rq_bcast_id)) {   //if recently heard this request, then drop it
 
 #ifdef DEBUG
    fprintf(stderr, "%s: discarding request\n", __FUNCTION__);
@@ -867,7 +875,7 @@ double delay = 0.0;
 
   // reset the soft state
   rt->rt_req_cnt = 0;
-  rt->rt_req_timeout = 0.0; 
+  rt->rt_req_timeout = 0.0;
   rt->rt_req_last_ttl = rp->rp_hop_count;
   
 if (ih->daddr() == index) { // If I am the original source
@@ -934,7 +942,7 @@ aodv_rt_entry *rt0 = rtable.rt_lookup(ih->daddr());
  }
 }
 
-
+/*receive the error pakcets from neighbour and check my own route table whether there is record to the destination: if yes, delete it and broadcast the error packets*/
 void
 AODV::recvError(Packet *p) {
 struct hdr_ip *ih = HDR_IP(p);
@@ -953,7 +961,7 @@ struct hdr_aodv_error *nre = HDR_AODV_ERROR(rerr);
 	(rt->rt_nexthop == ih->saddr()) &&
      	(rt->rt_seqno <= re->unreachable_dst_seqno[i]) ) {
 	assert(rt->rt_flags == RTF_UP);
-	assert((rt->rt_seqno%2) == 0); // is the seqno even?
+	assert((rt->rt_seqno%2) == 0); // is the seqno even? if yes, means infinity
 #ifdef DEBUG
      fprintf(stderr, "%s(%f): %d\t(%d\t%u\t%d)\t(%d\t%u\t%d)\n", __FUNCTION__,CURRENT_TIME,
 		     index, rt->rt_dst, rt->rt_seqno, rt->rt_nexthop,
@@ -978,7 +986,7 @@ struct hdr_aodv_error *nre = HDR_AODV_ERROR(rerr);
      	}
    }
  } 
-
+//if this node has unrechealble route, then broadcast the error packets RERR
  if (nre->DestCount > 0) {
 #ifdef DEBUG
    fprintf(stderr, "%s(%f): %d\t sending RERR...\n", __FUNCTION__, CURRENT_TIME, index);
@@ -1002,7 +1010,7 @@ AODV::forward(aodv_rt_entry *rt, Packet *p, double delay) {
 struct hdr_cmn *ch = HDR_CMN(p);
 struct hdr_ip *ih = HDR_IP(p);
 
- if(ih->ttl_ == 0) {
+ if(ih->ttl_ == 0) {     //if hot is zero, then drop
 
 #ifdef DEBUG
   fprintf(stderr, "%s: calling drop()\n", __PRETTY_FUNCTION__);
@@ -1011,15 +1019,15 @@ struct hdr_ip *ih = HDR_IP(p);
   drop(p, DROP_RTR_TTL);
   return;
  }
-
+//if : 1. not AODV data packets 2. link direction is UP 3. this is destination
  if ((( ch->ptype() != PT_AODV && ch->direction() == hdr_cmn::UP ) &&
 	((u_int32_t)ih->daddr() == IP_BROADCAST))
 		|| (ih->daddr() == here_.addr_)) {
-	dmux_->recv(p,0);
+	dmux_->recv(p,0);   //give it to classifier
 	return;
  }
 
- if (rt) {
+ if (rt) { //if the route to destination exists, set parameters
    assert(rt->rt_flags == RTF_UP);
    rt->rt_expire = CURRENT_TIME + ACTIVE_ROUTE_TIMEOUT;
    ch->next_hop_ = rt->rt_nexthop;
@@ -1028,7 +1036,7 @@ struct hdr_ip *ih = HDR_IP(p);
  }
  else { // if it is a broadcast packet
    // assert(ch->ptype() == PT_AODV); // maybe a diff pkt type like gaf
-   assert(ih->daddr() == (nsaddr_t) IP_BROADCAST);
+   assert(ih->daddr() == (nsaddr_t) IP_BROADCAST);      // if it is a broadcast
    ch->addr_type() = NS_AF_NONE;
    ch->direction() = hdr_cmn::DOWN;       //important: change the packet's direction
  }
@@ -1041,7 +1049,7 @@ if (ih->daddr() == (nsaddr_t) IP_BROADCAST) {
       *  Jitter the sending of AODV broadcast packets by 10ms
       */
      Scheduler::instance().schedule(target_, p,
-      				   0.01 * Random::uniform());
+      				   0.01 * Random::uniform());        // add timer to it
    } else {
      Scheduler::instance().schedule(target_, p, 0.);  // No jitter
    }
