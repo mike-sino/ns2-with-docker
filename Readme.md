@@ -24,9 +24,9 @@ have issue in other OS)
 * ### jupyter notebook
 Access to http://localhost:8080 with login password: "jupyter"
 * ### python tools
-Tools for ns2 simulation written in python
+Python files for ns2 simulation preparation and results analyser
 * ### trace file parser
-A ns-2 trace file analyser written in python with GUI named [APP-tool](https://github.com/WiNG-NITK/APP-Tool)
+[APP Tool](https://github.com/WiNG-NITK/APP-Tool) (Automated Post Processing tool) is a ns2 tracefile analyser with GUI
 * ### tcl generation tool
 [NSG2.1](https://sites.google.com/site/pengjungwu/nsg) is devlopped in Java to make generation of tcl file easy
 
