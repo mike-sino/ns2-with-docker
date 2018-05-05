@@ -1,6 +1,6 @@
-#!/usr/bin/python
 # GUI for the tracefile analysis tool
 import os, subprocess
+import gi
 from gi.repository import Gtk
 import matplotlib.pyplot as plt
 
