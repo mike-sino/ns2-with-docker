@@ -39,7 +39,7 @@ This project includes:
 * ### jupyter lab
 Access to http://localhost:8080 with login password: "jupyter"
 
-![Jupyterlab](https://github.com/mike-sino/ns2.35-with-docker/blob/master/images/jupyterlab.png)
+![Jupyterlab](https://github.com/mike-sino/ns2.35-with-docker/blob/master/images/jupyter.png)
 
 * ### python tools
 [ns2 tools](http://www.evanjones.ca/software/ns2tools.html) for simulation preparation and results parser
