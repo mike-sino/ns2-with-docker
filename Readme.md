@@ -36,11 +36,13 @@ This project includes:
 
 ![Nam](https://github.com/mike-sino/ns2.35-with-docker/blob/master/images/NAM.png)
 
+* ### jupyter lab
+Access to http://localhost:8080 with login password: "jupyter"
+
+![Jupyterlab](https://github.com/mike-sino/ns2.35-with-docker/blob/master/images/jupyterlab.png)
+
 * ### python tools
 [ns2 tools](http://www.evanjones.ca/software/ns2tools.html) for simulation preparation and results parser
-
-* ### jupyter notebook
-Access to http://localhost:8080 with login password: "jupyter"
 
 ## Virtualization
 In order to display the GUI (nam / NSG / APP Tool) from docker to macOS that you should:
