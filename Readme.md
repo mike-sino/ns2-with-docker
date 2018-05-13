@@ -23,13 +23,22 @@ This project includes:
 ## Tools
 * ### tcl generation tool
 [NSG2.1](https://sites.google.com/site/pengjungwu/nsg) is devlopped in Java to make generation of tcl file easy with GUI
+
+![NSG2.1](https://github.com/mike-sino/ns2.35-with-docker/blob/master/images/NSG2.1.png)
+
 * ### trace file parser
 [APP Tool](https://github.com/WiNG-NITK/APP-Tool) (Automated Post Processing tool) is a ns2 tracefile analyser with GUI
+
+![APP Tool](https://github.com/mike-sino/ns2.35-with-docker/blob/master/images/APP%20Tools.png)
+
 * ### nam: network animator
 [Nam](https://www.isi.edu/nsnam/nam/) is a Tcl/TK based animation tool for viewing network simulation traces and real world packet traces.
 
+![Nam](https://github.com/mike-sino/ns2.35-with-docker/blob/master/images/NAM.png)
+
 * ### python tools
 [ns2 tools](http://www.evanjones.ca/software/ns2tools.html) for simulation preparation and results parser
+
 * ### jupyter notebook
 Access to http://localhost:8080 with login password: "jupyter"
 
