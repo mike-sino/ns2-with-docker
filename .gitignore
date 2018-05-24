@@ -1,2 +1,5 @@
 docs/_build/
 ns2tools/.ipynb_checkpoints
+
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
