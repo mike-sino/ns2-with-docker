@@ -9,7 +9,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ../../../notebook:/notebook        # can be changed according to demand
+      - ../../../Bitbucket/ieice-paper/notebook:/notebook        # can be changed according to demand
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ../ns-2.35:/ns2/ns-2.35
       - ../py-parser:/app/py-parser
